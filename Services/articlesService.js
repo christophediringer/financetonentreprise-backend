@@ -1,10 +1,52 @@
+const { Article, User } = require('../models');
+// const { Article, Comment, User } = require('../models');
+
 class ArticlesService {
     async getAllArticles() {
-        return await Article.findAll();
+        return await Article.findAll({
+            include: [
+                { 
+                    model: User,
+                    attributes: ['id', 'first_name', 'last_name', 'email']
+                },
+                // Commenté temporairement jusqu'à l'implémentation du modèle Comment
+                /*
+                {
+                    model: Comment,
+                    include: [
+                        {
+                            model: User,
+                            attributes: ['id', 'first_name', 'last_name', 'email']
+                        }
+                    ]
+                }
+                */
+            ],
+            order: [['created_at', 'DESC']]
+        });
     }
 
     async getArticleById(id) {
-        return await Article.findByPk(id);
+        return await Article.findByPk(id, {
+            include: [
+                { 
+                    model: User,
+                    attributes: ['id', 'first_name', 'last_name', 'email']
+                },
+                // Commenté temporairement jusqu'à l'implémentation du modèle Comment
+                /*
+                {
+                    model: Comment,
+                    include: [
+                        {
+                            model: User,
+                            attributes: ['id', 'first_name', 'last_name', 'email']
+                        }
+                    ]
+                }
+                */
+            ]
+        });
     }
 
     async createArticle(articleData) {
@@ -27,6 +69,36 @@ class ArticlesService {
         }
         return false;
     }
+
+    // Méthodes pour les commentaires, à implémenter plus tard
+    /*
+    async addComment(articleId, content, userId) {
+        const article = await Article.findByPk(articleId);
+        if (!article) {
+            throw new Error("Article not found");
+        }
+        return await Comment.create({
+            content,
+            articleId,
+            userId
+        });
+    }
+
+    async replyToComment(articleId, commentId, content, userId) {
+        const comment = await Comment.findOne({
+            where: { id: commentId, articleId: articleId }
+        });
+        if (!comment) {
+            throw new Error("Comment not found");
+        }
+        return await Comment.create({
+            content,
+            articleId,
+            userId,
+            parentCommentId: commentId
+        });
+    }
+    */
 }
 
 module.exports = new ArticlesService();

@@ -1,42 +1,22 @@
-const { Model, DataTypes } = require('sequelize');
-const sequelize = require('../config/database');
-const User = require('./User');
-const Category = require('./Category');
+const { Model, DataTypes } = require("sequelize");
+const sequelize = require('../Config/Sequelize');
 
-class Content extends Model {}
+class Comment extends Model {
+  static associate(models) {
+    Comment.belongsTo(models.User, { foreignKey: 'user_id' });
+    Comment.belongsTo(models.Article, { foreignKey: 'article_id' });
+  }
+}
 
-Content.init({
-    id: {
-        type: DataTypes.INTEGER,
-        primaryKey: true,
-        autoIncrement: true
-    },
-    title: {
-        type: DataTypes.STRING,
-        allowNull: false
-    },
-    body: {
-        type: DataTypes.TEXT,
-        allowNull: false
-    },
-    user_id: {
-        type: DataTypes.INTEGER,
-        allowNull: false
-    },
-    category_id: {
-        type: DataTypes.INTEGER,
-        allowNull: true
-    }
+Comment.init({
+    // définissez ici les attributs du modèle Comment
 }, {
     sequelize,
-    modelName: 'Content',
-    tableName: 'contents',
+    modelName: 'Comment',
+    tableName: 'comments',
     timestamps: true,
     createdAt: 'created_at',
     updatedAt: 'updated_at'
 });
 
-Content.belongsTo(User, { foreignKey: 'user_id' });
-Content.belongsTo(Category, { foreignKey: 'category_id' });
-
-module.exports = Content;
+module.exports = Comment;

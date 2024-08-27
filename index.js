@@ -1,30 +1,43 @@
 // Importe dépendances
 const express = require('express');
+const cors = require('cors');
+const sequelize = require('./config/sequelize');
+
+sequelize.authenticate()
+  .then(() => console.log('Connexion à la base de données établie avec succès.'))
+  .catch(err => console.error('Impossible de se connecter à la base de données:', err));
+
+
 
 const UsersRoutes = require('./Routes/UsersRoutes');
+const ArticlesRoutes = require('./Routes/articlesRoute');
+const CategoryRoutes = require('./Routes/categoryRoutes');
+const ContentRoutes = require('./Routes/contentRoutes');
+const CommentsRoutes = require('./Routes/commentsRoutes');
 
 // Créer instance de l'application Express
 const app = express();
 
-// Définir le port. 3003 
-const port = 3003;
+// Définir le port
+const port = 3001;
 
+// Middleware
+app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-// 5 tyoes de requettes possible GET POST PATCH DELETE PUT
-// Premier parametre est la route pour acceder aux données
-//  Deusième parametre est la fonction fléché qui va faire le traitement, prend toujours 2 paramettre (request et result)
-
-app.get ('/Hello', (request, result) => {
-    // envoi les données à l'utilisateur
-    result.send('hello word')
-})
+// Routes
+app.get('/Hello', (request, result) => {
+    result.send('hello world');
+});
 
 app.use('/Users', UsersRoutes);
+app.use('/Articles', ArticlesRoutes);
+app.use('/Category', CategoryRoutes);
+app.use('/Content', ContentRoutes);
+app.use('/Comments', CommentsRoutes);
 
-
-
-// Premier paramettre port sur lequel le serveur va ecouter
-// Deuxième paramettre une fonction fléché qui est faite au lancement du serveur
+// Démarrer le serveur
 app.listen(port, () => {
-    console.log("Votre serveur est lancé sur http://127.0.0.1:"+port)
-})
+    console.log(`Votre serveur est lancé sur http://localhost:${port}`);
+});

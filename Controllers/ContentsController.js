@@ -1,4 +1,4 @@
-const ContentsService = require('../Services/ContentsService');
+const ContentsService = require('../Services/contentservice');
 
 class ContentsController {
     async getAllContents(request, result) {

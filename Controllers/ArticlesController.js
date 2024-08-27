@@ -6,8 +6,8 @@ class ArticlesController {
             const articles = await ArticlesService.getAllArticles();
             result.json(articles);
         } catch (error) {
-            result.status(500);
-            result.json({ error: "Une erreur est survenue lors de la récupération des articles" });
+            console.error("Erreur dans getAllArticles:", error);
+            result.status(500).json({ error: "Une erreur est survenue lors de la récupération des articles" });
         }
     }
 
@@ -17,13 +17,11 @@ class ArticlesController {
             if (article) {
                 result.json(article);
             } else {
-                result.status(404);
-                result.json({ error: "Article non trouvé" });
+                result.status(404).json({ error: "Article non trouvé" });
             }
         } catch (error) {
-            console.log(error);
-            result.status(500);
-            result.json({ error: "Une erreur est survenue lors de la récupération de l'article" });
+            console.error(error);
+            result.status(500).json({ error: "Une erreur est survenue lors de la récupération de l'article" });
         }
     }
 
@@ -32,6 +30,7 @@ class ArticlesController {
             const newArticle = await ArticlesService.createArticle(request.body);
             result.status(201).json(newArticle);
         } catch (error) {
+            console.error("Erreur dans createArticle:", error);
             result.status(500).json({ error: "Une erreur est survenue lors de la création de l'article" });
         }
     }
@@ -45,8 +44,8 @@ class ArticlesController {
                 result.status(404).json({ error: "Article non trouvé" });
             }
         } catch (error) {
-            result.status(500);
-            result.json({ error: "Une erreur est survenue lors de la mise à jour de l'article" });
+            console.error("Erreur dans updateArticle:", error);
+            result.status(500).json({ error: "Une erreur est survenue lors de la mise à jour de l'article" });
         }
     }
 
@@ -56,14 +55,14 @@ class ArticlesController {
             if (deleted) {
                 result.status(204).send();
             } else {
-                result.status(404);
-                result.json({ error: "Article non trouvé" });
+                result.status(404).json({ error: "Article non trouvé" });
             }
         } catch (error) {
-            result.status(500);
-            result.json({ error: "Une erreur est survenue lors de la suppression de l'article" });
+            console.error("Erreur dans deleteArticle:", error);
+            result.status(500).json({ error: "Une erreur est survenue lors de la suppression de l'article" });
         }
     }
 }
 
 module.exports = new ArticlesController();
+

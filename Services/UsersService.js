@@ -1,34 +1,43 @@
-const Users = require('../Models/Users');
+const { login } = require("../Controllers/UsersControllers");
+const Users = require("../Models/User");
 
 class UsersService {
-    async getAllUsers() {
-        return await Users.findAll();
+  async getAllUsers() {
+    return await Users.findAll();
+  }
+
+  async getUserById(id) {
+    return await Users.findByPk(id);
+  }
+
+  async createUser(userData) {
+    return await Users.create(userData);
+  }
+
+  async updateUser(id, userData) {
+    const user = await Users.findByPk(id);
+    if (user) {
+      return await user.update(userData);
     }
 
-    async getUserById(id) {
-        return await Users.findByPk(id);
-    }
+    individualHooks: true;
+  }
 
-    async createUser(userData) {
-        return await Users.create(userData);
+  async deleteUser(id) {
+    const user = await Users.findByPk(id);
+    if (user) {
+      await user.destroy();
+      return true;
     }
-
-    async updateUser(id, userData) {
-        const user = await Users.findByPk(id);
-        if (user) {
-            return await user.update(userData);
-        }
-        return null;
+    return false;
+  }
+  async login(email, password) {
+    const users = await users.findOne({ where: { email: email } });
+    if (!users || !(await users.validate.password(password))) {
+      throw new error("email ou password incorect");
     }
-
-    async deleteUser(id) {
-        const user = await Users.findByPk(id);
-        if (user) {
-            await user.destroy();
-            return true;
-        }
-        return false;
-    }
+    return users;
+  }
 }
 
 module.exports = new UsersService();

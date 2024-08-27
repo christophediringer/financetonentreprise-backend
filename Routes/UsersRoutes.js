@@ -1,14 +1,18 @@
 const express = require('express');
-const UsersControllers = require('../Controllers/UsersControllers');
-// constante pour spécifier routes
+const UsersController = require('../Controllers/UsersControllers');
+const AuthenticateController = require('../Controllers/authenticateController');
+
 const router = express.Router();
-// touots les routes seront précédé par /Users
 
-router.get("/", (request, result) => {UsersControllers.getAllUsers(request,result)});
-router.get("/:id", (request, result) => {UsersControllers.getUserById(request,result)});
-router.post("/", (request, result) => {UsersControllers.createUser(request,result)});
-router.put("/:id", (request, result) => {UsersControllers.updateUser(request,result)});
-router.delete("/:id", (request, result) => {UsersControllers.deleteUser(request,result)});
+// Routes publiques
+router.post("/register", UsersController.createUser);
+router.post("/login", UsersController.login);
 
+// Routes protégées
+router.get("/", AuthenticateController.authenticateToken, UsersController.getAllUsers);
+router.get("/:id", AuthenticateController.authenticateToken, UsersController.getUserById);
+router.put("/:id", AuthenticateController.authenticateToken, UsersController.updateUser);
+router.delete("/:id", AuthenticateController.authenticateToken, UsersController.deleteUser);
 
 module.exports = router;
+

@@ -1,6 +1,6 @@
-const Content = require('../model/Content');
-const User = require('../models/User');
-const Category = require('../model/Category');
+const Content = require('../Models/Content');
+const User = require('../Models/User');
+const Category = require('../Models/Category');
 
 class ContentsService {
     async getAllContents() {
